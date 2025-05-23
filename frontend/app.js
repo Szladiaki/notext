@@ -4,7 +4,7 @@ let currentUser = localStorage.getItem("user") || "";
 let isLogin = true;
 let editingNoteId = null;
 
-const API_BASE = "http://localhost:3001";
+const API_BASE = "";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (token && currentUser) {

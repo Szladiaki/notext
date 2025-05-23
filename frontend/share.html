@@ -36,7 +36,7 @@
       errorEl.textContent = "❌ Nincs megosztási azonosító.";
       errorEl.classList.remove("hidden");
     } else {
-      fetch(`http://localhost:3001/api/notes/share/${shareId}`)
+      fetch(`/api/notes/share/${shareId}`)
         .then(res => {
           if (!res.ok) throw new Error("Nincs jegyzet");
           return res.json();
