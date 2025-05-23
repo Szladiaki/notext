@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Megosztott jegyzet</title>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 text-gray-800 font-sans">
+
+  <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-6 animate-fadeIn">
+    <h1 class="text-2xl font-bold flex items-center gap-2 mb-4">
+      📄 <span>Megosztott jegyzet</span>
+    </h1>
+
+    <div id="error" class="text-red-600 text-center font-semibold hidden">❌ Nem található ilyen jegyzet.</div>
+
+    <div id="note-box" class="space-y-4">
+      <h2 id="note-title" class="text-xl font-bold text-gray-900 break-words"></h2>
+      <div id="note-content" class="prose break-words max-w-none"></div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const shareId = params.get("id");
+
+    const titleEl = document.getElementById("note-title");
+    const contentEl = document.getElementById("note-content");
+    const errorEl = document.getElementById("error");
+    const boxEl = document.getElementById("note-box");
+
+    if (!shareId) {
+      boxEl.classList.add("hidden");
+      errorEl.textContent = "❌ Nincs megosztási azonosító.";
+      errorEl.classList.remove("hidden");
+    } else {
+      fetch(`http://localhost:3001/api/notes/share/${shareId}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Nincs jegyzet");
+          return res.json();
+        })
+        .then(note => {
+          titleEl.textContent = note.title;
+          contentEl.innerHTML = marked.parse(note.content);
+        })
+        .catch(() => {
+          boxEl.classList.add("hidden");
+          errorEl.classList.remove("hidden");
+        });
+    }
+  </script>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.4s ease-out;
+    }
+  </style>
+</body>
+</html>

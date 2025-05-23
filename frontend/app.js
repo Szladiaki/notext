@@ -4,7 +4,7 @@ let currentUser = localStorage.getItem("user") || "";
 let isLogin = true;
 let editingNoteId = null;
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = "http://localhost:3001";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (token && currentUser) {
@@ -18,25 +18,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function openModal(login = true) {
   isLogin = login;
-  document.getElementById('modal-title').textContent = login ? 'Bejelentkezés' : 'Regisztráció';
-  document.getElementById('modal-username').value = '';
-  document.getElementById('modal-password').value = '';
-  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById("modal-title").textContent = login
+    ? "Bejelentkezés"
+    : "Regisztráció";
+  document.getElementById("modal-username").value = "";
+  document.getElementById("modal-password").value = "";
+  document.getElementById("modal").classList.remove("hidden");
 }
 
 function closeModal() {
-  document.getElementById('modal').classList.add('hidden');
+  document.getElementById("modal").classList.add("hidden");
 }
 
 async function submitModal() {
-  const user = document.getElementById('modal-username').value.trim();
-  const pass = document.getElementById('modal-password').value.trim();
-  if (!user || !pass) return alert('❗ Kérlek tölts ki minden mezőt!');
+  const user = document.getElementById("modal-username").value.trim();
+  const pass = document.getElementById("modal-password").value.trim();
+  if (!user || !pass) return alert("❗ Kérlek tölts ki minden mezőt!");
 
-  const endpoint = isLogin ? 'login' : 'register';
+  const endpoint = isLogin ? "login" : "register";
   const res = await fetch(`${API_BASE}/api/auth/${endpoint}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: user, password: pass })
   });
 
@@ -71,14 +73,12 @@ function logout() {
 }
 
 function showUserInterface() {
-  document.getElementById('user-display').textContent = currentUser;
-  document.getElementById('user-display').classList.remove("hidden");
-  document.getElementById('logout-btn').classList.remove("hidden");
-  document.getElementById('profile-section').classList.remove("hidden");
-
-  // Elrejtjük a bejelentkezés és regisztráció gombokat
-  document.getElementById('login-btn').classList.add("hidden");
-  document.getElementById('register-btn').classList.add("hidden");
+  document.getElementById("user-display").textContent = currentUser;
+  document.getElementById("user-display").classList.remove("hidden");
+  document.getElementById("logout-btn").classList.remove("hidden");
+  document.getElementById("profile-section").classList.remove("hidden");
+  document.getElementById("login-btn").classList.add("hidden");
+  document.getElementById("register-btn").classList.add("hidden");
 }
 
 function uploadProfilePic(e) {
@@ -86,12 +86,12 @@ function uploadProfilePic(e) {
   if (!file) return;
 
   const formData = new FormData();
-  formData.append('image', file);
+  formData.append("image", file);
 
   fetch(`${API_BASE}/api/users/profile-pic`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      Authorization: 'Bearer ' + token
+      Authorization: "Bearer " + token
     },
     body: formData
   })
@@ -108,11 +108,9 @@ function uploadProfilePic(e) {
     });
 }
 
-
-
 async function loadNotes() {
   const res = await fetch(`${API_BASE}/api/notes`, {
-    headers: { Authorization: 'Bearer ' + token }
+    headers: { Authorization: "Bearer " + token }
   });
   if (!res.ok) return alert("❌ Jegyzetek betöltése sikertelen!");
   notes = await res.json();
@@ -120,15 +118,16 @@ async function loadNotes() {
 }
 
 function displayNotes(list, highlightId = null) {
-  const container = document.getElementById('notes');
-  container.innerHTML = '';
+  const container = document.getElementById("notes");
+  container.innerHTML = "";
   for (const n of list) {
-    const card = document.createElement('div');
-    card.className = 'p-4 bg-white rounded shadow flex flex-col justify-between transition-all duration-700 overflow-hidden break-words';
+    const card = document.createElement("div");
+    card.className =
+      "p-4 bg-white rounded shadow flex flex-col justify-between transition-all duration-700 overflow-hidden break-words";
     if (n._id === highlightId) {
-      card.classList.add('ring-2', 'ring-purple-400', 'scale-[1.02]');
+      card.classList.add("ring-2", "ring-purple-400", "scale-[1.02]");
       setTimeout(() => {
-        card.classList.remove('ring-2', 'ring-purple-400', 'scale-[1.02]');
+        card.classList.remove("ring-2", "ring-purple-400", "scale-[1.02]");
       }, 1500);
     }
     card.innerHTML = `
@@ -139,6 +138,7 @@ function displayNotes(list, highlightId = null) {
       <div class="mt-2 flex gap-2 justify-end">
         <button onclick="openEditModal('${n._id}')" class="text-blue-600 hover:underline">✏️</button>
         <button onclick="deleteNote('${n._id}')" class="text-red-600 hover:underline">🗑️</button>
+        <button onclick="shareNote('${n._id}')" class="text-green-600 hover:underline">🔗</button>
       </div>
     `;
     container.appendChild(card);
@@ -146,26 +146,26 @@ function displayNotes(list, highlightId = null) {
 }
 
 function openNoteModal() {
-  document.getElementById('noteModal').classList.remove('hidden');
-  setTimeout(() => document.getElementById('note-title-input').focus(), 100);
+  document.getElementById("noteModal").classList.remove("hidden");
+  setTimeout(() => document.getElementById("note-title-input").focus(), 100);
 }
 
 function closeNoteModal() {
-  document.getElementById('noteModal').classList.add('hidden');
-  document.getElementById('note-title-input').value = '';
-  document.getElementById('note-content-input').value = '';
+  document.getElementById("noteModal").classList.add("hidden");
+  document.getElementById("note-title-input").value = "";
+  document.getElementById("note-content-input").value = "";
 }
 
 async function submitNote() {
-  const title = document.getElementById('note-title-input').value.trim();
-  const content = document.getElementById('note-content-input').value.trim();
+  const title = document.getElementById("note-title-input").value.trim();
+  const content = document.getElementById("note-content-input").value.trim();
   if (!title || !content) return alert("❗ Cím és tartalom kötelező!");
 
   const res = await fetch(`${API_BASE}/api/notes`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
     },
     body: JSON.stringify({ title, content })
   });
@@ -192,8 +192,8 @@ function openEditModal(id) {
 
 function closeEditModal() {
   document.getElementById("editModal").classList.add("hidden");
-  document.getElementById("edit-title-input").value = '';
-  document.getElementById("edit-content-input").value = '';
+  document.getElementById("edit-title-input").value = "";
+  document.getElementById("edit-content-input").value = "";
   editingNoteId = null;
 }
 
@@ -202,10 +202,10 @@ async function submitEdit() {
   const content = document.getElementById("edit-content-input").value.trim();
   if (!title || !content) return alert("❗ Minden mező kötelező!");
   await fetch(`${API_BASE}/api/notes/${editingNoteId}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
     },
     body: JSON.stringify({ title, content })
   });
@@ -216,8 +216,8 @@ async function submitEdit() {
 async function deleteNote(id) {
   if (!confirm("Biztosan törlöd?")) return;
   await fetch(`${API_BASE}/api/notes/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: 'Bearer ' + token }
+    method: "DELETE",
+    headers: { Authorization: "Bearer " + token }
   });
   loadNotes();
 }
@@ -228,4 +228,18 @@ function searchNotes(term) {
     n.content.toLowerCase().includes(term.toLowerCase())
   );
   displayNotes(f);
+}
+
+async function shareNote(id) {
+  try {
+    const res = await fetch(`${API_BASE}/api/notes/${id}/share`, {
+      method: "PUT",
+      headers: { Authorization: "Bearer " + token }
+    });
+    const data = await res.json();
+    const url = `${window.location.origin}/share.html?id=${data.shareId}`;
+    window.open(url, '_blank'); // Új ablakban nyitja meg a megosztott jegyzetet
+  } catch (e) {
+    alert("❌ Hiba történt a megosztás során.");
+  }
 }
