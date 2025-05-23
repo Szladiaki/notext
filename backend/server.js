@@ -22,7 +22,7 @@ app.use('/api/notes', noteRoutes);
 app.use('/api/users', userRoutes);
 
 // Fájlok kiszolgálása (pl. profilképek)
-app.use('/uploads', express.static('uploads'));
+app.use('/api/uploads', express.static('uploads'));
 
 // 🔧 Statikus frontend fájlok (pl. index.html, share.html stb.)
 app.use(express.static(path.join(__dirname, '../frontend')));

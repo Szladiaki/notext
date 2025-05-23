@@ -26,7 +26,7 @@ const upload = multer({ storage });
 // PUT /api/users/profile-pic (fájlfeltöltés)
 router.put('/profile-pic', authMiddleware, upload.single('image'), async (req, res) => {
   try {
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = `/api/uploads/${req.file.filename}`;
     await User.updateOne(
       { username: req.username },
       { profilePic: imageUrl }
